@@ -4,6 +4,7 @@
 #include "PointFormat.h"
 #include "Graph.h"
 #include "AntColony.h"
+#include "BeeColony.h"
 
 void particleSwarmOptimization() {
     double optimalLowerBounds[3] = {-10.0, -5.12, -500.0};
@@ -138,7 +139,16 @@ void antColonyTest() {
 }
 
 void beeColonyOptimization() {
+    int size = 100;
+    double variableLowerBounds = -500.0;
+    double variableUpperBounds = 500.0;
+    BeeColony beeColony(size, variableLowerBounds, variableUpperBounds);
 
+    MathFunction* function = new SchwefelFunction(3);
+    int iterations = 1000;
+
+    std::vector<double> optimum = beeColony.findOptimal(function, iterations);
+    std::cout << "Функция ? достигает максимума в точке " << pointToString(optimum) << std::endl;
 }
 
 int main() {

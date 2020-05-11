@@ -16,4 +16,17 @@ std::string pointToString(const std::vector<double>& x) {
     return result;
 }
 
+void tryReadDouble(double& out) {
+    std::string input;
+    std::getline(std::cin, input);
+
+    //std::string::size_type sz;
+    try {
+        out = std::stod(input);
+    }
+    catch (std::invalid_argument& e) {
+        return;
+    }
+}
+
 #endif //OPTIMIZATION_POINTFORMAT_H

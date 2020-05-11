@@ -4,14 +4,7 @@
 
 #include <random>
 #include "Swarm.h"
-
-//случайное число из диапазона
-inline double get_random(double min_range, double max_range) {
-    std::random_device r;
-    std::uniform_real_distribution<double> unif(min_range, max_range);
-    std::default_random_engine eng(r());
-    return unif(eng);
-}
+#include "QuickRandom.h"
 
 Swarm::Swarm(
         std::shared_ptr<MathFunction> objective, size_t size,

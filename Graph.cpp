@@ -40,8 +40,11 @@ void Graph::addVertex(std::string id) {
 Graph::Graph() = default;
 
 Graph::~Graph() {
-    for (Vertex* vertex: vertices)
-        delete vertex;
+    //TODO: fix "(fasttop)" error (probably related to virtual destructor or to duplicating of edges in deriving class)
+//    for (Vertex* vertex: vertices)
+//        delete vertex;
+//    for (Edge* edge: edges)
+//        delete edge;
 }
 
 Graph::Edge::Edge(Graph::Vertex *v1, Graph::Vertex *v2, double weight) : v1(v1), v2(v2), weight(weight) {}

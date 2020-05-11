@@ -13,7 +13,7 @@
 class Graph {
 public:
     Graph();
-    ~Graph();
+    virtual ~Graph();
 
     //TODO: template
     class Vertex {
@@ -45,7 +45,7 @@ public:
     void addVertex(std::string id);
 
     class Edge {
-    private:
+    protected:
         Vertex* v1;
         Vertex* v2;
         double weight;
@@ -78,15 +78,27 @@ public:
         void addNextEdge(Edge*);
 
         std::string to_string() const;
+
+        double getSummaryDistance() const {
+            double result = 0;
+            for (auto edge: edges)
+                result += edge->getWeight();
+            return result;
+        }
+
+        bool empty() const {
+            return edges.empty();
+        }
     };
 
-    void addEdge(std::string id1, std::string id2, double weight);
+    virtual void addEdge(std::string id1, std::string id2, double weight);
     double getWeightByVertices(Vertex* v1, Vertex* v2);
 
     std::vector<Vertex*> getAdjacent(Vertex* vertex);
     Path Dijkstra(const std::string& startID, const std::string& endID);
 
-private:
+
+protected:
     std::vector<Vertex*> vertices;
     std::vector<Edge*> edges;
 };

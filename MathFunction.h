@@ -6,6 +6,75 @@
 #define OPTIMIZATION_MATHFUNCTION_H
 
 #include <vector>
+#include <stdexcept>
+
+class Point {
+private:
+    int dimension;
+    std::vector<double> coord;
+
+public:
+    explicit Point(const std::vector<double> &coord) : coord(coord) {
+        this->dimension = coord.size();
+    }
+
+    std::vector<double> getCoord() const {
+        return coord;
+    }
+
+    double getCoord(size_t i) const {
+        return coord.at(i);
+    }
+
+    int getDimension() const {
+        return dimension;
+    }
+
+    void setCoord(const std::vector<double> &coord) {
+        if (coord.size() != this->coord.size())
+            throw std::runtime_error("Point::setCoord() - bad argument");
+        this->coord = coord;
+    }
+
+    bool operator== (const Point& point) {
+        if (point.getDimension() != this->getDimension())
+            return false;
+        for (int i = 0; i < point.getDimension(); i++)
+            if (this->getCoord(i) != point.getCoord(i))
+                return false;
+        return true;
+    }
+
+    Point operator+ (const Point& point) {
+        if (point.getDimension() != this->getDimension())
+            throw std::runtime_error("Point::operator+ - bad argument");
+
+        std::vector<double> sumCoord(point.getDimension());
+        for (int i = 0; i < point.getDimension(); i++) {
+            sumCoord[i] = this->getCoord(i) + point.getCoord(i);
+        }
+        return Point(sumCoord);
+    }
+
+    Point operator- (const Point& point) {
+        if (point.getDimension() != this->getDimension())
+            throw std::runtime_error("Point::operator+ - bad argument");
+
+        std::vector<double> sumCoord(point.getDimension());
+        for (int i = 0; i < point.getDimension(); i++) {
+            sumCoord[i] = this->getCoord(i) - point.getCoord(i);
+        }
+        return Point(sumCoord);
+    }
+
+    Point operator* (double number) { //TODO: сделать двусторонним, возможно путем вынесения вне класса
+        std::vector<double> resultCoord(this->getCoord());
+        for (int i = 0; i < this->getDimension(); i++)
+            resultCoord[i] = getCoord(i) * number;
+        return Point(resultCoord);
+    }
+
+};
 
 class MathFunction {
 private:
@@ -17,6 +86,13 @@ public:
 
     virtual double getValue(std::vector<double> x) = 0;
     virtual double getDerivative(std::vector<double> x) = 0; //TODO: is it necessary?
+
+    virtual double getValue(const Point& point) {
+        return this->getValue(point.getCoord());
+    };
+    virtual double getDerivative(Point point) {
+        return this->getDerivative(point.getCoord());
+    }; //TODO: is it necessary?
 
     virtual std::vector<double> getGlobalMinimumPoint() = 0;
     virtual double getGlobalMinimum() = 0;

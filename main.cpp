@@ -140,15 +140,24 @@ void antColonyTest() {
 
 void beeColonyOptimization() {
     int size = 100;
+    std::shared_ptr<MathFunction> function(new SchwefelFunction(3));
     double variableLowerBounds = -500.0;
     double variableUpperBounds = 500.0;
-    BeeColony beeColony(size, variableLowerBounds, variableUpperBounds);
 
     MathFunction* function = new SchwefelFunction(3);
     int iterations = 1000;
 
     std::vector<double> optimum = beeColony.findOptimal(function, iterations);
     std::cout << "Функция ? достигает максимума в точке " << pointToString(optimum) << std::endl;
+}
+
+void testPoint() {
+    Point p1({0, 1, 2});
+    Point p2({1, 3, -1});
+
+    std::cout << pointToString((p1 * 2).getCoord()) << std::endl;
+    std::cout << pointToString((p1 + p2).getCoord()) << std::endl;
+    std::cout << pointToString((p1 - p2).getCoord()) << std::endl;
 }
 
 int main() {
@@ -171,6 +180,10 @@ int main() {
 
         case 3:
             beeColonyOptimization();
+            break;
+
+        case 4:
+            testPoint();
             break;
 
         default:

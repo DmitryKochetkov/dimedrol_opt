@@ -139,16 +139,19 @@ void antColonyTest() {
 }
 
 void beeColonyOptimization() {
-    int size = 100;
+    int size = 10;
     std::shared_ptr<MathFunction> function(new SchwefelFunction(3));
-    double variableLowerBounds = -500.0;
-    double variableUpperBounds = 500.0;
+    double variableLowerBounds = -50.0;
+    double variableUpperBounds = 50.0;
 
-    MathFunction* function = new SchwefelFunction(3);
+    BeeColony beeColony(function, size, variableLowerBounds, variableUpperBounds);
+
     int iterations = 1000;
 
-    std::vector<double> optimum = beeColony.findOptimal(function, iterations);
-    std::cout << "Функция ? достигает максимума в точке " << pointToString(optimum) << std::endl;
+    std::vector<Point> optimumFoodSources = beeColony.findOptimal(iterations);
+    std::cout << "Алгоритм пчелиной колонии выявил следующие наиболее выгодные источники пищи:" << std::endl;
+    for (auto foodSource: optimumFoodSources)
+        std::cout << pointToString(foodSource.getCoord()) << std::endl;
 }
 
 void testPoint() {

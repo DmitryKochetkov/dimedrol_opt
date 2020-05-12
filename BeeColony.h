@@ -7,13 +7,36 @@
 
 
 #include <vector>
+#include <memory>
 #include "MathFunction.h"
 
 class BeeColony {
-public:
-    BeeColony(int size, double variableLowerBounds, double variableUpperBounds);
+    class Bee {
+        Point position;
 
-    std::vector<double> findOptimal(MathFunction* function, int iterations);
+    public:
+        Bee(Point point);
+
+        Point getPosition() const;
+
+        void setPosition(const Point &position);
+    };
+
+    std::vector<Bee*> employees; //рабочие пчелы
+    std::vector<Bee*> onlookers; //пчелы-наблюдатели
+    std::vector<Bee*> scouts; //пчелы-разведчики
+
+    std::shared_ptr<MathFunction> function;
+    std::vector<Point> foodSources;
+
+    double getFitness(const Point &point) const;
+
+public:
+    BeeColony(std::shared_ptr<MathFunction> function, int size, double variableLowerBounds, double variableUpperBounds);
+
+    virtual ~BeeColony();
+
+    std::vector<Point> findOptimal(int iterations);
 };
 
 

@@ -60,12 +60,12 @@ std::vector<Point> BeeColony::findOptimal(int iterations) {
             //Point newPosition = employees[i]->getPosition() + (employees[partner_id]->getPosition() - employees[i]->getPosition()) * get_random(-1.0, 1.0);
 
             newPosition.setCoord(0, 701);
-            
-            for (int i = 0; i < newPosition.getDimension(); i++) {
-                if (newPosition.getCoord(i) < variableLowerBounds)
-                    newPosition.setCoord(i, variableLowerBounds);
-                else if (newPosition.getCoord(i) > variableUpperBounds)
-                    newPosition.setCoord(i, variableUpperBounds);
+
+            for (int j = 0; j < newPosition.getDimension(); j++) {
+                if (newPosition.getCoord(j) < variableLowerBounds)
+                    newPosition.setCoord(j, variableLowerBounds);
+                else if (newPosition.getCoord(j) > variableUpperBounds)
+                    newPosition.setCoord(j, variableUpperBounds);
             }
 
             if (getFitness(newPosition) > getFitness(employees[i]->getPosition()))

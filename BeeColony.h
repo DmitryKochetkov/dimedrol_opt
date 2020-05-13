@@ -29,6 +29,9 @@ class BeeColony {
     std::shared_ptr<MathFunction> function;
     std::vector<Point> foodSources;
 
+    double variableLowerBounds;
+    double variableUpperBounds;
+
     double getFitness(const Point &point) const;
 
 public:

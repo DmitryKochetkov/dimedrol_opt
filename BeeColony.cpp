@@ -8,6 +8,8 @@
 
 BeeColony::BeeColony(std::shared_ptr<MathFunction> function, int size, double variableLowerBounds, double variableUpperBounds) {
     this->function = function;
+    this->variableLowerBounds = variableLowerBounds;
+    this->variableUpperBounds = variableUpperBounds;
 
     //термины:
     //solution - значение функции в источнике пищи
@@ -56,6 +58,16 @@ std::vector<Point> BeeColony::findOptimal(int iterations) {
                     employees[i]->getPosition().getCoord(variable_id) +
                     (employees[partner_id]->getPosition().getCoord(variable_id) - employees[i]->getPosition().getCoord(variable_id)) * get_random(-1.0, 1.0));
             //Point newPosition = employees[i]->getPosition() + (employees[partner_id]->getPosition() - employees[i]->getPosition()) * get_random(-1.0, 1.0);
+
+            newPosition.setCoord(0, 701);
+            
+            for (int i = 0; i < newPosition.getDimension(); i++) {
+                if (newPosition.getCoord(i) < variableLowerBounds)
+                    newPosition.setCoord(i, variableLowerBounds);
+                else if (newPosition.getCoord(i) > variableUpperBounds)
+                    newPosition.setCoord(i, variableUpperBounds);
+            }
+
             if (getFitness(newPosition) > getFitness(employees[i]->getPosition()))
                 employees[i]->setPosition(Point(newPosition));
         }

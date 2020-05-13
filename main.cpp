@@ -146,7 +146,7 @@ void beeColonyOptimization() {
 
     BeeColony beeColony(function, size, variableLowerBounds, variableUpperBounds);
 
-    int iterations = 1000;
+    int iterations = 100;
 
     std::vector<Point> optimumFoodSources = beeColony.findOptimal(iterations);
     std::cout << "Алгоритм пчелиной колонии выявил следующие наиболее выгодные источники пищи:" << std::endl;

@@ -12,14 +12,16 @@
 
 class BeeColony {
     class Bee {
-        Point position;
+        Point* position;
 
     public:
-        Bee(Point point);
+        Bee(Point* point);
 
-        Point getPosition() const;
+        Point* getPosition() const;
 
-        void setPosition(const Point &position);
+        //TODO: выяснить, насколько ужасны такие два брата-акробата
+        void setPosition(Point*); //сюда передается элемент Food Source
+        void setPosition(const Point&); //эта штука больше ведет себя как конструктор копирования, наверно его то в классе Point и не хватает
     };
 
     std::vector<Bee*> employees; //рабочие пчелы

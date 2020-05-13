@@ -30,6 +30,7 @@ class BeeColony {
 
     std::shared_ptr<MathFunction> function;
     std::vector<Point> foodSources;
+    Point* bestSolution = nullptr;
 
     double variableLowerBounds;
     double variableUpperBounds;

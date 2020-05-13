@@ -43,12 +43,19 @@ std::vector<Point> BeeColony::findOptimal(int iterations) {
     for (int it = 0; it < iterations; it++) {
         //фаза рабочих пчел
         for (int i = 0; i < employees.size(); i++) {
-            //поиск более хорошего источника пищи
+            //выбор случайного партнера для сравнения
             int partner_id = i;
             while (partner_id == i)
                 partner_id = get_random(0, employees.size() - 1);
 
-            Point newPosition = employees[i]->getPosition() + (employees[partner_id]->getPosition() - employees[i]->getPosition()) * get_random(-1.0, 1.0);
+            //выбор случайной переменной для изменения
+            int variable_id = get_random(0, function->getDimension() - 1);
+
+            Point newPosition = employees[i]->getPosition();
+            newPosition.setCoord(variable_id,
+                    employees[i]->getPosition().getCoord(variable_id) +
+                    (employees[partner_id]->getPosition().getCoord(variable_id) - employees[i]->getPosition().getCoord(variable_id)) * get_random(-1.0, 1.0));
+            //Point newPosition = employees[i]->getPosition() + (employees[partner_id]->getPosition() - employees[i]->getPosition()) * get_random(-1.0, 1.0);
             if (getFitness(newPosition) > getFitness(employees[i]->getPosition()))
                 employees[i]->setPosition(Point(newPosition));
         }
@@ -82,8 +89,8 @@ std::vector<Point> BeeColony::findOptimal(int iterations) {
 //            double newValue =
 //            onlookers.getFoodSource().setVariable(id, value);
 //        }
-//
-//
+
+
 //        //запоминаем лучшее решение (только среди рабочих?) (и что значит лучшее?)
 //        for (auto bee: employees)
 //            if (getFitness())

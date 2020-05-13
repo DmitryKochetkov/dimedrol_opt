@@ -141,8 +141,8 @@ void antColonyTest() {
 void beeColonyOptimization() {
     int size = 10;
     std::shared_ptr<MathFunction> function(new SchwefelFunction(3));
-    double variableLowerBounds = -50.0;
-    double variableUpperBounds = 50.0;
+    double variableLowerBounds = -700.0;
+    double variableUpperBounds = 700.0;
 
     BeeColony beeColony(function, size, variableLowerBounds, variableUpperBounds);
 

@@ -36,6 +36,10 @@ public:
         this->coord = coord;
     }
 
+    void setCoord(size_t variable_id, double value) {
+        this->coord.at(variable_id) = value;
+    }
+
     bool operator== (const Point& point) {
         if (point.getDimension() != this->getDimension())
             return false;

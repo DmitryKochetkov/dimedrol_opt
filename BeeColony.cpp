@@ -116,27 +116,27 @@ std::vector<Point> BeeColony::findOptimal(int iterations) {
             }
         }
 
-        //фаза разведчиков
-        for (int i = 0; i < trial.size(); i++) {
-            if (trial[i] > 0) {
-                //generate a random solution
-                std::vector<double> newCoord;
-                for (int j = 0; j < function->getDimension(); j++)
-                    newCoord.push_back(variableLowerBounds + (variableUpperBounds - variableLowerBounds) * get_random(-1.0, 1.0));
-
-                if (bestSolution == nullptr || getFitness(foodSources[i]) > getFitness(*bestSolution)) {
-                    delete bestSolution;
-                    bestSolution = new Point(foodSources[i].getCoord());
-                }
-
-                foodSources[i].setCoord(newCoord);
-                trial[i] = 0;
-            }
-        }
+//        //фаза разведчиков TODO: выяснить, почему без нее работает, а с ней нет
+//        for (int i = 0; i < trial.size(); i++) {
+//            if (trial[i] > 0) {
+//                //generate a random solution
+//                std::vector<double> newCoord;
+//                for (int j = 0; j < function->getDimension(); j++)
+//                    newCoord.push_back(variableLowerBounds + (variableUpperBounds - variableLowerBounds) * get_random(-1.0, 1.0));
+//
+//                if (bestSolution == nullptr || getFitness(foodSources[i]) > getFitness(*bestSolution)) {
+//                    delete bestSolution;
+//                    bestSolution = new Point(foodSources[i].getCoord());
+//                }
+//
+//                foodSources[i].setCoord(newCoord);
+//                trial[i] = 0;
+//            }
+//        }
     }
 
-    //return foodSources;
-    return std::vector<Point>({*bestSolution});
+    return foodSources;
+    //return std::vector<Point>({*bestSolution});
 }
 
 BeeColony::~BeeColony() {

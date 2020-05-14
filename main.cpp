@@ -140,19 +140,47 @@ void antColonyTest() {
 
 void beeColonyOptimization() {
     int size = 100;
-    std::shared_ptr<MathFunction> function(new SchwefelFunction(3));
+    int dimension = 3;
+    std::shared_ptr<MathFunction> objective;
+
+    std::cout << "Выберите целевую функцию:" << std::endl;
+    std::cout << "\t1. Функция сферы" << std::endl;
+    std::cout << "\t2. Функция Растригина" << std::endl;
+    std::cout << "\t3. Функция Швефеля" << std::endl;
+
+    int foo_code;
+    std::cin >> foo_code;
+    switch (foo_code) {
+        case 1:
+            objective = std::shared_ptr<MathFunction>(new SphereFunction(dimension));
+            break;
+
+        case 2:
+            objective = std::shared_ptr<MathFunction>(new RastriginFunction(dimension));
+            break;
+
+        case 3:
+            objective = std::shared_ptr<MathFunction>(new SchwefelFunction(dimension));
+            break;
+
+        default:
+            return;
+    }
+
     double variableLowerBounds = -500.0;
     double variableUpperBounds = 500.0;
 
-    BeeColony beeColony(function, size, variableLowerBounds, variableUpperBounds);
+    BeeColony beeColony(objective, size, variableLowerBounds, variableUpperBounds);
 
     int iterations = 1000;
 
     std::vector<Point> optimumFoodSources = beeColony.findOptimal(iterations);
+    std::cout << "Глобальная точка минимума данной функции: " << pointToString(objective->getGlobalMinimumPoint()) << std::endl;
+    std::cout << "Глобальный минимум: " << objective->getGlobalMinimum() << std::endl;
+
     std::cout << "Алгоритм пчелиной колонии выявил следующие наиболее выгодные источники пищи:" << std::endl;
     for (auto foodSource: optimumFoodSources)
-        std::cout << pointToString(foodSource.getCoord()) << ", f(x) = " << function->getValue(foodSource) << std::endl;
-    std::cout << "f(420.0) = " << function->getValue({430}) << std::endl;
+        std::cout << pointToString(foodSource.getCoord()) << ", f(x) = " << objective->getValue(foodSource) << std::endl;
 }
 
 void testPoint() {

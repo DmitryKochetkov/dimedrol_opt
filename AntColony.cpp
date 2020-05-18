@@ -4,7 +4,7 @@
 
 #include "AntColony.h"
 
-AntGraph::Path AntColony::Ant::nextIteration(AntColony &antColony) {
+AntGraph::Path* AntColony::Ant::nextIteration(AntColony &antColony) {
     visited = std::vector<Graph::Vertex*>();
     visited.push_back(start);
     double length = 0.0;
@@ -69,16 +69,32 @@ AntGraph::Path AntColony::Ant::nextIteration(AntColony &antColony) {
     if (std::unique(visited.begin(), visited.end()) != visited.end())
         std::cout << "Ant::nextIteration(): path contains duplicates" << std::endl;
 
-    Graph::Path path;
-    for (int i = 0; i < visited.size() - 1; i++) {
-        //собираем путь
-        path.addNextEdge(antColony.graph.getEdge(visited[i]->getId(), visited[i+1]->getId()));
-        //для всех ребер обновить феромоны после прохода муравья
+//    if (std::find(
+//            antColony.graph.getAdjacent(visited.back()).begin(),
+//            antColony.graph.getAdjacent(visited.back()).end(),
+//            visited.front()) != antColony.graph.getAdjacent(visited.back()).end())
+//        visited.push_back(start);
+//    else return nullptr;
+
+    Graph::Path* path = new Graph::Path(&antColony.graph, start);
+//    for (int i = 0; i < visited.size() - 1; i++) {
+//        //собираем путь
+//        path.addNextVertex(antColony.graph.getEdge(visited[i]->getId(), visited[i+1]->getId()));
+//        //для всех ребер обновить феромоны после прохода муравья
+//        antColony.graph.getEdge(visited.at(i)->getId(), visited.at(i+1)->getId())->setPheromone(antColony.pheromone_multiplier/length);
+//    }
+
+    for (int i = 1; i < visited.size() - 1; i++) {
+        path->addNextVertex(visited[i]);
         antColony.graph.getEdge(visited.at(i)->getId(), visited.at(i+1)->getId())->setPheromone(antColony.pheromone_multiplier/length);
     }
+    path->addNextVertex(visited.back());
 
     //испарение феромонов на всех ребрах
     antColony.graph.vaporize(antColony.pheromone_evaporation);
 
-    return path;
+    if (path->isHamilton())
+        return path;
+    else return nullptr;
+
 }

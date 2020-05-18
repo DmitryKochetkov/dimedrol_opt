@@ -55,55 +55,55 @@ void particleSwarmOptimization() {
               << " в точке " << pointToString(swarm.getGlobalBestCoord());
 }
 
-void antColonyOptimization() {
-    AntGraph graph;
-    graph.addVertex("1");
-    graph.addVertex("2");
-    graph.addVertex("3");
-    graph.addVertex("4");
-    graph.addVertex("5");
-    graph.addVertex("6");
-    graph.addEdge("1", "2", 7);
-    graph.addEdge("1", "3", 9);
-    graph.addEdge("2", "3", 10);
-    graph.addEdge("1", "6", 14);
-    graph.addEdge("3", "6", 2);
-    graph.addEdge("3", "4", 11);
-    graph.addEdge("6", "5", 9);
-    graph.addEdge("5", "4", 6);
-    graph.addEdge("2", "4", 15);
-
-    std::cout << "Введите размер колонии: ";
-    int size;
-    std::cin >> size;
-
-    double distance_importance = 0.5;
-    double pheromone_importance = 1.0;
-    double pheromone_multiplier = 1.0;
-    double pheromone_evaporation = 0.5;
-
-    std::cout << "Введите коэффициент важности расстояния [по умолчанию " << distance_importance << "]: ";
-    tryReadDouble(distance_importance);
-    std::cout << "Введите коэффициент важности феромона [по умолчанию " << pheromone_importance << "]: ";
-    tryReadDouble(pheromone_importance);
-    std::cout << "Введите коэффициент к обратной пропорциональности в обновлении феромона [по умолчанию " << pheromone_multiplier << "]: ";
-    tryReadDouble(pheromone_multiplier);
-    std::cout << "Введите коэффициент испарения феромона [по умолчанию " << pheromone_evaporation << "]: ";
-    tryReadDouble(pheromone_evaporation);
-
-    AntColony antColony(graph, size, 0.5, 1.0, 1.0, 0.5); //todo: подобрать параметры
-
-    std::cout << "Введите количество итераций: ";
-    int iterations;
-    std::cin >> iterations;
-
-    //std::cout << "Оптимальный путь по какому-то еще алгоритму: " << std::endl;
-    //и тут еще какая-то функция, которой нет
-
-    std::cout << "Оптимальный путь по муравьиному алгоритму: " << std::endl;
-    AntGraph::Path optimalPath = antColony.findOptimalPath(iterations);
-    std::cout << optimalPath.to_string() << std::endl;
-}
+//void antColonyOptimization() {
+//    AntGraph graph;
+//    graph.addVertex("1");
+//    graph.addVertex("2");
+//    graph.addVertex("3");
+//    graph.addVertex("4");
+//    graph.addVertex("5");
+//    graph.addVertex("6");
+//    graph.addEdge("1", "2", 7);
+//    graph.addEdge("1", "3", 9);
+//    graph.addEdge("2", "3", 10);
+//    graph.addEdge("1", "6", 14);
+//    graph.addEdge("3", "6", 2);
+//    graph.addEdge("3", "4", 11);
+//    graph.addEdge("6", "5", 9);
+//    graph.addEdge("5", "4", 6);
+//    graph.addEdge("2", "4", 15);
+//
+//    std::cout << "Введите размер колонии: ";
+//    int size;
+//    std::cin >> size;
+//
+//    double distance_importance = 0.5;
+//    double pheromone_importance = 1.0;
+//    double pheromone_multiplier = 1.0;
+//    double pheromone_evaporation = 0.5;
+//
+//    std::cout << "Введите коэффициент важности расстояния [по умолчанию " << distance_importance << "]: ";
+//    tryReadDouble(distance_importance);
+//    std::cout << "Введите коэффициент важности феромона [по умолчанию " << pheromone_importance << "]: ";
+//    tryReadDouble(pheromone_importance);
+//    std::cout << "Введите коэффициент к обратной пропорциональности в обновлении феромона [по умолчанию " << pheromone_multiplier << "]: ";
+//    tryReadDouble(pheromone_multiplier);
+//    std::cout << "Введите коэффициент испарения феромона [по умолчанию " << pheromone_evaporation << "]: ";
+//    tryReadDouble(pheromone_evaporation);
+//
+//    AntColony antColony(graph, size, 0.5, 1.0, 1.0, 0.5); //todo: подобрать параметры
+//
+//    std::cout << "Введите количество итераций: ";
+//    int iterations;
+//    std::cin >> iterations;
+//
+//    //std::cout << "Оптимальный путь по какому-то еще алгоритму: " << std::endl;
+//    //и тут еще какая-то функция, которой нет
+//
+//    std::cout << "Оптимальный путь по муравьиному алгоритму: " << std::endl;
+//    AntGraph::Path optimalPath = antColony.findOptimalPath(iterations);
+//    std::cout << optimalPath.to_string() << std::endl;
+//}
 
 void antColonyTest() {
     AntGraph graph;
@@ -132,10 +132,11 @@ void antColonyTest() {
 
     int iterations = 100;
     AntColony antColony(graph, size, 0.5, 1.0, 1.0, 0.5); //todo: подобрать эвристики
-    AntGraph::Path optimalPath = antColony.findOptimalPath(iterations); //ожидаем (3,5), (5,2), (2,1), (1,4), (4,6), (6,3) - длина 9
+    AntGraph::Path* optimalPath = antColony.findOptimalPath(iterations); //ожидаем (3,5), (5,2), (2,1), (1,4), (4,6), (6,3) - длина 9
 
-
-    std::cout << optimalPath.to_string() << std::endl;
+    if (optimalPath != nullptr)
+        std::cout << optimalPath->to_string() << std::endl;
+    else std::cout << "Гамильтонов путь не найден" << std::endl;
 }
 
 void beeColonyOptimization() {
@@ -172,7 +173,7 @@ void beeColonyOptimization() {
 
     BeeColony beeColony(objective, size, variableLowerBounds, variableUpperBounds);
 
-    int iterations = 1000;
+    int iterations = 200;
 
     std::vector<Point> optimumFoodSources = beeColony.findOptimal(iterations);
     std::cout << "Глобальная точка минимума данной функции: " << pointToString(objective->getGlobalMinimumPoint()) << std::endl;

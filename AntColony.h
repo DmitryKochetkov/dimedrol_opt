@@ -28,7 +28,7 @@ public:
             return visited.back(); //текущее местоположение - последняя вершина в списке узлов
         }
 
-        AntGraph::Path nextIteration(AntColony& antColony);
+        Graph::Path * nextIteration(AntColony& antColony);
     };
 
 private:
@@ -55,16 +55,17 @@ public:
         }
     }
 
-    AntGraph::Path findOptimalPath(size_t iterations) {
+    AntGraph::Path* findOptimalPath(size_t iterations) {
         //TODO: переинцициализировать муравьев для многократного вызова
-        AntGraph::Path path;
+        AntGraph::Path* path = nullptr;
 
         for (Ant ant: ants) {
-            AntGraph::Path current_path = ant.nextIteration(*this); // TODO: посмотреть правиьно ли его ищет nextIteration
+            AntGraph::Path* current_path = ant.nextIteration(*this); // TODO: посмотреть правиьно ли его ищет nextIteration
             double res = 0;
 
-            if (path.empty() || current_path.getSummaryDistance() < path.getSummaryDistance())
-                path = current_path;
+            if (current_path != nullptr)
+                if (path == nullptr || current_path->getSummaryDistance() > path->getSummaryDistance())
+                    path = current_path;
         }
 
         return path;

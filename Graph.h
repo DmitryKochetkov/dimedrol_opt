@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <algorithm>
 
 class Graph {
 public:
@@ -53,8 +54,8 @@ public:
     public:
         Edge(Vertex *v1, Vertex *v2, double weight);
 
-        const Vertex* get_v1() { return v1; }
-        const Vertex* get_v2() { return v2; }
+        Vertex* get_v1() const { return v1; }
+        Vertex* get_v2() const { return v2; }
 
         double getWeight() const;
 
@@ -72,22 +73,51 @@ public:
     class Path {
         //list of edges, guarantees coherence
     private:
-        std::list<Edge*> edges;
+        std::vector<Vertex*> order;
+        Graph* graph;
 
     public:
-        void addNextEdge(Edge*);
+        Path(Graph* graph, Vertex* start) {
+            this->graph = graph;
+            order.push_back(start);
+        }
+
+        void addNextVertex(Vertex*);
+        void addNextVertex(Edge*);
 
         std::string to_string() const;
 
         double getSummaryDistance() const {
             double result = 0;
-            for (auto edge: edges)
-                result += edge->getWeight();
+            for (int i = 0; i < order.size() - 1; i++)
+                graph->getWeightByVertices(order[i], order[i+1]);
             return result;
         }
 
         bool empty() const {
-            return edges.empty();
+            return order.empty();
+        }
+
+        bool isHamilton() const {
+            if (empty())
+                return true;
+
+//            auto adjacent = graph->getAdjacent(order.front());
+//            if (std::find(adjacent.begin(), adjacent.end(), order.back()) == adjacent.end())
+//                return false;
+
+            std::vector<Vertex*> pathVertices = order;
+            std::vector<Vertex*> graphVertices = graph->vertices;
+
+            std::sort(pathVertices.begin(), pathVertices.end(), [](const Vertex* v1, const Vertex* v2) { return v1->getId() > v2->getId(); });
+            std::sort(graphVertices.begin(), graphVertices.end(), [](const Vertex* v1, const Vertex* v2) { return v1->getId() > v2->getId(); });
+            if (pathVertices.size() != graphVertices.size())
+                return false;
+
+            for (int i = 0; i < pathVertices.size(); i++)
+                if (pathVertices[i] != graphVertices[i])
+                    return false;
+            return true;
         }
     };
 

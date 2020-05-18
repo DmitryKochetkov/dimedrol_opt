@@ -90,6 +90,8 @@ std::vector<Graph::Vertex *> Graph::getAdjacent(Graph::Vertex *vertex) {
 }
 
 double Graph::getWeightByVertices(Vertex* v1, Vertex* v2) {
+    if (v1 == v2) {return 0;} //TODO: is that right?
+
     Edge* key = nullptr;
     for (Edge* edge: edges) {
         if (edge->getSecond(v1) == v2)
@@ -159,30 +161,52 @@ Graph::Path Graph::Dijkstra(const std::string &startID, const std::string &endID
             }
     }
 
-    Graph::Path path;
+    Graph::Path path(this, start);
     for (Edge* edge: reversed)
-        path.addNextEdge(edge);
+        path.addNextVertex(edge);
     return path;
 }
 
 std::string Graph::Path::to_string() const {
-    if (this->edges.empty())
+    if (order.empty())
         return "empty path";
 
+    //edge case
+//    std::string result;
+//    for (auto iter = this->edges.begin(); iter != this->edges.end(); iter++)
+//        result += (*iter)->get_v1()->getId() + " -> ";
+//    result += this->edges.back()->get_v2()->getId();
+//    return result;
+
     std::string result;
-    for (auto iter = this->edges.begin(); iter != this->edges.end(); iter++)
-        result += (*iter)->get_v1()->getId() + " -> ";
-    result += this->edges.back()->get_v2()->getId();
+    for (int i = 0; i < order.size() - 1; i++)
+        result += order[i]->getId() + " -> ";
+    result += order.back()->getId();
+
     return result;
 }
 
-void Graph::Path::addNextEdge(Graph::Edge* edge) {
-    if (!this->edges.empty() && this->edges.back()->getSecond(edge->get_v1()) == nullptr && this->edges.back()->getSecond(edge->get_v2()) == nullptr) {
-        std::cout << "WARNING Graph::addNextEdge: edge is not coherent" << std::endl;
+void Graph::Path::addNextVertex(Graph::Vertex * vertex) {
+    graph->getWeightByVertices(vertex, order.back()); // check edge exists
+
+    order.push_back(vertex);
+}
+
+void Graph::Path::addNextVertex(Graph::Edge* edge) {
+    if (order.empty()) {
+        //и опять не понятно, в каком порядке их пушить
+        order.push_back(edge->get_v1());
+        order.push_back(edge->get_v2());
         return;
     }
 
-    this->edges.push_back(edge);
+    Vertex* candidate = edge->getSecond(order.back());
+    if (!order.empty() && candidate == nullptr) {
+        std::cout << "WARNING Graph::addNextVertex(edge): edge is not coherent" << std::endl;
+        return;
+    }
+
+    order.push_back(candidate);
 }
 
 //Graph::Vertex::Vertex(const std::string &id) : id(id) {}
